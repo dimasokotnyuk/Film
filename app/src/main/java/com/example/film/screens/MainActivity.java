@@ -26,10 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     private int page = 1;
 
-    private boolean isLoading = false;
-    private boolean isLastPage = false;
-    private int totalPage = 14;
-
     private MovieViewModel viewModel;
 
     @Override
@@ -41,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
         adapter=new MovieAdapter();
         adapter.setMovies(new ArrayList<Movie>());
-        GridLayoutManager linearLayoutManager = new GridLayoutManager(this,2);
-        recyclerViewMovies.setLayoutManager(linearLayoutManager);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
+        recyclerViewMovies.setLayoutManager(gridLayoutManager);
         recyclerViewMovies.setAdapter(adapter);
 
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
@@ -53,28 +49,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         viewModel.loadData(page);
-        recyclerViewMovies.addOnScrollListener(new PaginationScrollListener(linearLayoutManager ) {
+        recyclerViewMovies.addOnScrollListener(new PaginationScrollListener(gridLayoutManager) {
             @Override
-            protected void loadMoreItems() {
-                isLoading=true;
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 page++;
                 viewModel.loadMore(page);
-                isLoading=false;
-            }
-
-            @Override
-            public int getTotalPageCount() {
-                return totalPage;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return isLastPage;
-            }
-
-            @Override
-            public boolean isLoading() {
-                return isLoading;
             }
         });
     }

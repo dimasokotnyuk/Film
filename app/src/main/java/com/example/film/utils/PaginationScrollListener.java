@@ -87,7 +87,8 @@ public abstract class PaginationScrollListener extends RecyclerView.OnScrollList
             // the visibleThreshold and need to reload more data.
             // If we do need to reload some more data, we execute onLoadMore to fetch the data.
             // threshold should reflect how many total columns there are too
-            if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
+            //(-2 добавил)
+            if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount-10) {
                 currentPage++;
                 onLoadMore(currentPage, totalItemCount, view);
                 loading = true;

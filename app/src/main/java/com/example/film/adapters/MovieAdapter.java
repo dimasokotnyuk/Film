@@ -1,5 +1,6 @@
 package com.example.film.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,11 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.film.R;
 import com.example.film.data.Movie;
+import com.example.film.screens.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,6 +23,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private static final String BASE_URL_POSTER="https://image.tmdb.org/t/p/w342";
 
     private List<Movie> movies;
+
+    Context context;
+
+    public MovieAdapter(Context context) {
+        this.context = context;
+    }
 
     public List<Movie> getMovies() {
         return movies;
@@ -40,6 +50,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder movieViewHolder, int i) {
         Movie movie = movies.get(i);
         Picasso.get().load(BASE_URL_POSTER+movie.getPosterPath()).into(movieViewHolder.imageViewPoster);
+       // Glide.with(context).load(BASE_URL_POSTER+movie.getPosterPath()).into(movieViewHolder.imageViewPoster);
     }
 
     @Override

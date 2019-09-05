@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.film.R;
 import com.example.film.adapters.MovieAdapter;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerViewMovies=findViewById(R.id.recyclerViewMovie);
 
-        adapter=new MovieAdapter();
+        adapter=new MovieAdapter(this);
         adapter.setMovies(new ArrayList<Movie>());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
         recyclerViewMovies.setLayoutManager(gridLayoutManager);
@@ -56,5 +57,8 @@ public class MainActivity extends AppCompatActivity {
                 viewModel.loadMore(page);
             }
         });
+        Log.d("myResult","create");
     }
+
+
 }

@@ -55,6 +55,8 @@ public class MovieViewModel extends AndroidViewModel {
         }
     }
 
+
+
     private void deleteAllMovie() {
         new DeleteAllMovieTask().execute();
     }

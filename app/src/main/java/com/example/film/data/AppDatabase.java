@@ -6,7 +6,9 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Movie.class}, version = 3, exportSchema = false)
+import com.example.film.Model.Movie;
+
+@Database(entities = {Movie.class}, version = 14 , exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String DB_NAME = "movies.db";

@@ -1,27 +1,35 @@
 package com.example.film.data;
 
 import android.app.Application;
-import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.film.Model.Movie;
+import com.example.film.Model.MovieResponse;
 import com.example.film.api.ApiFactory;
 import com.example.film.api.ApiService;
 
 import java.util.List;
+import java.util.Observable;
 
-import io.reactivex.Scheduler;
+import io.reactivex.CompletableObserver;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import rx.Completable;
 
 public class MovieViewModel extends AndroidViewModel {
 
     private static AppDatabase db;
     private LiveData<List<Movie>> movies;
     private MutableLiveData<Throwable> errors;
+    private MutableLiveData<Movie> movieMutableLiveData;
 
     private ApiFactory apiFactory = ApiFactory.getInstance();
     private ApiService apiService = apiFactory.getApiService();
@@ -31,10 +39,15 @@ public class MovieViewModel extends AndroidViewModel {
         db = AppDatabase.getInstance(application);
         movies = db.movieDao().getAllMovies();
         errors = new MutableLiveData<>();
+        movieMutableLiveData = new MutableLiveData<>();
     }
 
     public LiveData<List<Movie>> getMovies() {
         return movies;
+    }
+
+    public LiveData<Movie> getMovieMutableLiveData() {
+        return movieMutableLiveData;
     }
 
     public MutableLiveData<Throwable> getErrors() {
@@ -42,35 +55,37 @@ public class MovieViewModel extends AndroidViewModel {
     }
 
     private void insertMovie(List<Movie> movies) {
-        new InsertMovieTask().execute(movies);
+        io.reactivex.Completable.fromAction(() -> db.movieDao().insertMovies(movies))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
-
-    private static class InsertMovieTask extends AsyncTask<List<Movie>, Void, Void> {
-        @Override
-        protected Void doInBackground(List<Movie>... lists) {
-            if (lists != null && lists.length > 0) {
-                db.movieDao().insertMovies(lists[0]);
-            }
-            return null;
-        }
-    }
-
-
 
     private void deleteAllMovie() {
-        new DeleteAllMovieTask().execute();
+        Completable.fromAction(() -> db.movieDao().deleteAllMovies())
+                .subscribeOn(rx.schedulers.Schedulers.io())
+                .subscribe();
+
     }
 
-    private static class DeleteAllMovieTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            db.movieDao().deleteAllMovies();
-            return null;
-        }
+    public void getMovieById(int movieId) {
+        db.movieDao().getMovieById(movieId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Movie>() {
+                    @Override
+                    public void accept(Movie movie) throws Exception {
+                        movieMutableLiveData.setValue(movie);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                });
     }
 
-    public void loadData(int page) {
-        apiService.getMovie(page)
+    public void loadData(String apiKey, String language, String sortBy, int page) {
+        apiService.getMovie(apiKey, language, sortBy, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<MovieResponse>() {
@@ -87,8 +102,8 @@ public class MovieViewModel extends AndroidViewModel {
                 });
     }
 
-    public void loadMore(int page) {
-        apiService.getMovie(page)
+    public void loadMore(String apiKey, String language, String sortBy, int page) {
+        apiService.getMovie(apiKey, language, sortBy, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<MovieResponse>() {

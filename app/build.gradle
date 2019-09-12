@@ -76,4 +76,15 @@ dependencies {
     // Test helpers
     testImplementation 'androidx.room:room-testing:2.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    // RxJava support for Room
+    implementation 'android.arch.persistence.room:rxjava2:1.0.0-alpha5'
+// Testing support
+    androidTestImplementation 'android.arch.core:core-testing:1.0.0-alpha5'
+
+    implementation 'com.facebook.stetho:stetho:1.4.2'// устаревший OkHttp 2.x
+    implementation 'com.facebook.stetho:stetho-okhttp:1.4.2'
+// OkHttp 3.x
+    implementation "com.facebook.stetho:stetho:1.5.0"
 }

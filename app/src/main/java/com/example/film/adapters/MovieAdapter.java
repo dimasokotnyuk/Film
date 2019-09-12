@@ -5,15 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.film.R;
-import com.example.film.data.Movie;
-import com.example.film.screens.MainActivity;
+import com.example.film.Model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -24,7 +22,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     private List<Movie> movies;
 
-    Context context;
+    private Context context;
+
+    private OnPosterClickListener onPosterClickListener;
 
     public MovieAdapter(Context context) {
         this.context = context;
@@ -39,6 +39,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
 
+    public interface OnPosterClickListener{
+        void onPosterClick(int position);
+    }
+
+    public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
+        this.onPosterClickListener = onPosterClickListener;
+    }
+
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -50,21 +58,35 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder movieViewHolder, int i) {
         Movie movie = movies.get(i);
         Picasso.get().load(BASE_URL_POSTER+movie.getPosterPath()).into(movieViewHolder.imageViewPoster);
-       // Glide.with(context).load(BASE_URL_POSTER+movie.getPosterPath()).into(movieViewHolder.imageViewPoster);
+        movieViewHolder.textViewTitle.setText(movie.getTitle());
+        movieViewHolder.textViewOverview.setText(movie.getOverview());
+        //Glide.with(context).load(BASE_URL_POSTER+movie.getPosterPath()).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(movieViewHolder.imageViewPoster);
     }
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        return movies == null ? 0 : movies.size();
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView imageViewPoster;
+        private TextView textViewTitle;
+        private TextView textViewOverview;
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageViewPoster=itemView.findViewById(R.id.imageViewPoster);
+            imageViewPoster=itemView.findViewById(R.id.imageViewBigPoster);
+            textViewTitle=itemView.findViewById(R.id.textViewTitle);
+            textViewOverview=itemView.findViewById(R.id.textViewOverview);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(onPosterClickListener!=null){
+                        onPosterClickListener.onPosterClick(getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 }

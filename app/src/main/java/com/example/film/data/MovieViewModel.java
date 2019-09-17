@@ -6,7 +6,9 @@ import android.util.Log;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.room.Database;
 
+import com.example.film.Model.FavoriteMovie;
 import com.example.film.Model.Movie;
 import com.example.film.Model.MovieResponse;
 import com.example.film.api.ApiFactory;
@@ -30,6 +32,8 @@ public class MovieViewModel extends AndroidViewModel {
     private LiveData<List<Movie>> movies;
     private MutableLiveData<Throwable> errors;
     private MutableLiveData<Movie> movieMutableLiveData;
+    private LiveData<List<FavoriteMovie>> favouriteMovies;
+    private MutableLiveData<FavoriteMovie> favoriteMovieMutableLiveData;
 
     private ApiFactory apiFactory = ApiFactory.getInstance();
     private ApiService apiService = apiFactory.getApiService();
@@ -40,6 +44,15 @@ public class MovieViewModel extends AndroidViewModel {
         movies = db.movieDao().getAllMovies();
         errors = new MutableLiveData<>();
         movieMutableLiveData = new MutableLiveData<>();
+        favouriteMovies = db.movieDao().getAllFavouriteMovies();
+    }
+
+    public LiveData<List<FavoriteMovie>> getFavouriteMovies() {
+        return favouriteMovies;
+    }
+
+    public LiveData<FavoriteMovie> getFavoriteMovieMutableLiveData() {
+        return favoriteMovieMutableLiveData;
     }
 
     public LiveData<List<Movie>> getMovies() {
@@ -61,11 +74,42 @@ public class MovieViewModel extends AndroidViewModel {
                 .subscribe();
     }
 
-    private void deleteAllMovie() {
+    public void insertFavouriteMovie(FavoriteMovie favoriteMovie){
+        io.reactivex.Completable.fromAction(()-> db.movieDao().insertFavouriteMovies(favoriteMovie))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+    }
+
+    public void deleteAllMovie() {
         Completable.fromAction(() -> db.movieDao().deleteAllMovies())
                 .subscribeOn(rx.schedulers.Schedulers.io())
                 .subscribe();
 
+    }
+
+    public void deleteFavouriteMovie(FavoriteMovie favoriteMovie){
+        io.reactivex.Completable.fromAction(()-> db.movieDao().deleteFavouriteMovie(favoriteMovie))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+    }
+
+    public void getFavouriteMovieById(int favouriteMovieId){
+        db.movieDao().getFavouriteMovieById(favouriteMovieId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<FavoriteMovie>() {
+                    @Override
+                    public void accept(FavoriteMovie favoriteMovie) throws Exception {
+                        favoriteMovieMutableLiveData.setValue(favoriteMovie);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
     }
 
     public void getMovieById(int movieId) {

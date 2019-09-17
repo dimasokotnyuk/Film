@@ -9,8 +9,8 @@ import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "movies")
 public class Movie {
-@PrimaryKey(autoGenerate = true)
-private int uniqueId;
+    @PrimaryKey(autoGenerate = true)
+    private int uniqueId;
     @SerializedName("popularity")
     private double popularity;
     @SerializedName("vote_count")
@@ -38,23 +38,6 @@ private int uniqueId;
     @SerializedName("release_date")
     private String releaseDate;
 
-    public Movie(double popularity, int voteCount, boolean video, String posterPath, int id, boolean adult, String backdropPath, String originalLanguage, String originalTitle, String title, double voteAverage, String overview, String releaseDate) {
-        this.popularity = popularity;
-        this.voteCount = voteCount;
-        this.video = video;
-        this.posterPath = posterPath;
-        this.id = id;
-        this.adult = adult;
-        this.backdropPath = backdropPath;
-        this.originalLanguage = originalLanguage;
-        this.originalTitle = originalTitle;
-        this.title = title;
-        this.voteAverage = voteAverage;
-        this.overview = overview;
-        this.releaseDate = releaseDate;
-    }
-
-    @Ignore
     public Movie(int uniqueId, double popularity, int voteCount, boolean video, String posterPath, int id, boolean adult, String backdropPath, String originalLanguage, String originalTitle, String title, double voteAverage, String overview, String releaseDate) {
         this.uniqueId = uniqueId;
         this.popularity = popularity;
@@ -72,7 +55,22 @@ private int uniqueId;
         this.releaseDate = releaseDate;
     }
 
-
+    @Ignore
+    public Movie(double popularity, int voteCount, boolean video, String posterPath, int id, boolean adult, String backdropPath, String originalLanguage, String originalTitle, String title, double voteAverage, String overview, String releaseDate) {
+        this.popularity = popularity;
+        this.voteCount = voteCount;
+        this.video = video;
+        this.posterPath = posterPath;
+        this.id = id;
+        this.adult = adult;
+        this.backdropPath = backdropPath;
+        this.originalLanguage = originalLanguage;
+        this.originalTitle = originalTitle;
+        this.title = title;
+        this.voteAverage = voteAverage;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+    }
 
     public double getPopularity() {
         return popularity;

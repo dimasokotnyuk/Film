@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.example.film.Model.FavoriteMovie;
 import com.example.film.Model.Movie;
 
-@Database(entities = {Movie.class, FavoriteMovie.class}, version = 18 , exportSchema = false)
+@Database(entities = {Movie.class, FavoriteMovie.class}, version = 20 , exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String DB_NAME = "movies.db";

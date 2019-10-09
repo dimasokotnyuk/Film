@@ -146,7 +146,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setFavourite() {
-        movieViewModel.getFavouriteMovieById(id);
+       movieViewModel.getFavouriteMovieById(id);
         if (detailFavoriteMovie == null) {
             imageViewFavouriteAdd.setImageResource(R.drawable.favourite_add_to);
         } else {

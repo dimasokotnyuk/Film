@@ -100,7 +100,7 @@ public class MovieViewModel extends AndroidViewModel {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        favoriteMovieMutableLiveData.setValue(null);
                     }
                 });
     }

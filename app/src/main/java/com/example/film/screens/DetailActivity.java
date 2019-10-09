@@ -82,9 +82,11 @@ public class DetailActivity extends AppCompatActivity {
                 if (detailFavoriteMovie == null) {
                     movieViewModel.insertFavouriteMovie(new FavoriteMovie(detailMovie));
                     Toast.makeText(DetailActivity.this, "Добавлено", Toast.LENGTH_SHORT).show();
+                    imageViewFavouriteAdd.setImageResource(R.drawable.favourite_remove);
                 } else {
                     movieViewModel.deleteFavouriteMovie(detailFavoriteMovie);
                     Toast.makeText(DetailActivity.this, "Удалено", Toast.LENGTH_SHORT).show();
+                    imageViewFavouriteAdd.setImageResource(R.drawable.favourite_add_to);
                 }
                 setFavourite();
             }
@@ -92,16 +94,17 @@ public class DetailActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
+        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        observeLiveData(movieViewModel);
         if (intent.hasExtra("id") && intent.hasExtra("MainActivity")) {
             id = intent.getIntExtra("id", -1);
-            movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
             movieViewModel.getMovieById(id);
-            observeMovieLiveData(movieViewModel);
+//            observeMovieLiveData(movieViewModel);
         } else if (intent.hasExtra("id") && intent.hasExtra("FavouriteActivity")) {
             id = intent.getIntExtra("id", -1);
-            movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-            movieViewModel.getFavouriteMovieById(id);
-            observeFavouriteMovie(movieViewModel);
+            //movieViewModel.getFavouriteMovieById(id);
+            movieViewModel.getMovieById(id);
+//            observeFavouriteMovie(movieViewModel);
         } else {
             finish();
         }
@@ -109,49 +112,50 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    void observeMovieLiveData(MovieViewModel viewModel) {
-        viewModel.getMovieMutableLiveData().observe(this, new Observer<Movie>() {
-            @Override
-            public void onChanged(Movie movie) {
-                if (movie != null) {
-                    detailMovie = movie;
-
-                    textViewTitle.setText(detailMovie.getTitle());
-                    textViewOriginalTitle.setText(detailMovie.getOriginalTitle());
-                    textViewRating.setText(Double.toString(detailMovie.getVoteAverage()));
-                    textViewReleaseData.setText(detailMovie.getReleaseDate());
-                    textViewOverview.setText(detailMovie.getOverview());
-
-                    Picasso.get().load(BASE_URL_BIG_POSTER + detailMovie.getPosterPath()).into(imageViewBigPoster);
-                }
+    private void observeLiveData(MovieViewModel viewModel) {
+        viewModel.getMovieMutableLiveData().observe(this, movie -> {
+            if (movie != null) {
+                detailMovie = movie;
+                setMovieDataToViews(detailMovie);
             }
         });
-    }
 
-    void observeFavouriteMovie(MovieViewModel viewModel){
-        viewModel.getFavoriteMovieMutableLiveData().observe(this, new Observer<FavoriteMovie>() {
-            @Override
-            public void onChanged(FavoriteMovie favoriteMovie) {
-                detailFavoriteMovie = favoriteMovie;
-
-                textViewTitle.setText(detailFavoriteMovie.getTitle());
-                textViewOriginalTitle.setText(detailFavoriteMovie.getOriginalTitle());
-                textViewRating.setText(Double.toString(detailFavoriteMovie.getVoteAverage()));
-                textViewReleaseData.setText(detailFavoriteMovie.getReleaseDate());
-                textViewOverview.setText(detailFavoriteMovie.getOverview());
-
-                Picasso.get().load(BASE_URL_BIG_POSTER + detailFavoriteMovie.getPosterPath()).into(imageViewBigPoster);
+        viewModel.getFavoriteMovieMutableLiveData().observe(this, favoriteMovie -> {
+            detailFavoriteMovie = favoriteMovie;
+            if (detailFavoriteMovie != null) {
+                imageViewFavouriteAdd.setImageResource(R.drawable.favourite_remove);
+                setFavouriteMovieDataToViews(detailFavoriteMovie);
+            } else {
+                imageViewFavouriteAdd.setImageResource(R.drawable.favourite_add_to);
             }
         });
     }
 
     private void setFavourite() {
-       movieViewModel.getFavouriteMovieById(id);
+        movieViewModel.getFavouriteMovieById(id);
         if (detailFavoriteMovie == null) {
             imageViewFavouriteAdd.setImageResource(R.drawable.favourite_add_to);
         } else {
             imageViewFavouriteAdd.setImageResource(R.drawable.favourite_remove);
         }
     }
-}
+    private void setMovieDataToViews(Movie movie) {
+        textViewTitle.setText(movie.getTitle());
+        textViewOriginalTitle.setText(movie.getOriginalTitle());
+        textViewRating.setText(Double.toString(movie.getVoteAverage()));
+        textViewReleaseData.setText(movie.getReleaseDate());
+        textViewOverview.setText(movie.getOverview());
 
+        Picasso.get().load(BASE_URL_BIG_POSTER + movie.getPosterPath()).into(imageViewBigPoster);
+    }
+
+    private void setFavouriteMovieDataToViews(FavoriteMovie favoriteMovie) {
+        textViewTitle.setText(detailFavoriteMovie.getTitle());
+        textViewOriginalTitle.setText(detailFavoriteMovie.getOriginalTitle());
+        textViewRating.setText(Double.toString(detailFavoriteMovie.getVoteAverage()));
+        textViewReleaseData.setText(detailFavoriteMovie.getReleaseDate());
+        textViewOverview.setText(detailFavoriteMovie.getOverview());
+
+        Picasso.get().load(BASE_URL_BIG_POSTER + detailFavoriteMovie.getPosterPath()).into(imageViewBigPoster);
+    }
+}

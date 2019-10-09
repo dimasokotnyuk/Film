@@ -1,12 +1,10 @@
 package com.example.film.screens;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.film.Model.FavoriteMovie;
-import com.example.film.Model.Movie;
+import com.example.film.model.FavoriteMovie;
+import com.example.film.model.Movie;
 import com.example.film.R;
 import com.example.film.data.MovieViewModel;
 import com.squareup.picasso.Picasso;
@@ -99,12 +97,9 @@ public class DetailActivity extends AppCompatActivity {
         if (intent.hasExtra("id") && intent.hasExtra("MainActivity")) {
             id = intent.getIntExtra("id", -1);
             movieViewModel.getMovieById(id);
-//            observeMovieLiveData(movieViewModel);
         } else if (intent.hasExtra("id") && intent.hasExtra("FavouriteActivity")) {
             id = intent.getIntExtra("id", -1);
-            //movieViewModel.getFavouriteMovieById(id);
             movieViewModel.getMovieById(id);
-//            observeFavouriteMovie(movieViewModel);
         } else {
             finish();
         }
@@ -123,10 +118,8 @@ public class DetailActivity extends AppCompatActivity {
         viewModel.getFavoriteMovieMutableLiveData().observe(this, favoriteMovie -> {
             detailFavoriteMovie = favoriteMovie;
             if (detailFavoriteMovie != null) {
-                imageViewFavouriteAdd.setImageResource(R.drawable.favourite_remove);
-                setFavouriteMovieDataToViews(detailFavoriteMovie);
+                setMovieDataToViews(detailFavoriteMovie);
             } else {
-                imageViewFavouriteAdd.setImageResource(R.drawable.favourite_add_to);
             }
         });
     }
@@ -134,11 +127,12 @@ public class DetailActivity extends AppCompatActivity {
     private void setFavourite() {
         movieViewModel.getFavouriteMovieById(id);
         if (detailFavoriteMovie == null) {
-            imageViewFavouriteAdd.setImageResource(R.drawable.favourite_add_to);
-        } else {
             imageViewFavouriteAdd.setImageResource(R.drawable.favourite_remove);
+        } else {
+            imageViewFavouriteAdd.setImageResource(R.drawable.favourite_add_to);
         }
     }
+
     private void setMovieDataToViews(Movie movie) {
         textViewTitle.setText(movie.getTitle());
         textViewOriginalTitle.setText(movie.getOriginalTitle());
@@ -147,15 +141,5 @@ public class DetailActivity extends AppCompatActivity {
         textViewOverview.setText(movie.getOverview());
 
         Picasso.get().load(BASE_URL_BIG_POSTER + movie.getPosterPath()).into(imageViewBigPoster);
-    }
-
-    private void setFavouriteMovieDataToViews(FavoriteMovie favoriteMovie) {
-        textViewTitle.setText(detailFavoriteMovie.getTitle());
-        textViewOriginalTitle.setText(detailFavoriteMovie.getOriginalTitle());
-        textViewRating.setText(Double.toString(detailFavoriteMovie.getVoteAverage()));
-        textViewReleaseData.setText(detailFavoriteMovie.getReleaseDate());
-        textViewOverview.setText(detailFavoriteMovie.getOverview());
-
-        Picasso.get().load(BASE_URL_BIG_POSTER + detailFavoriteMovie.getPosterPath()).into(imageViewBigPoster);
     }
 }

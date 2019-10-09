@@ -1,6 +1,6 @@
 package com.example.film.api;
 
-import com.example.film.Model.MovieResponse;
+import com.example.film.model.MovieResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

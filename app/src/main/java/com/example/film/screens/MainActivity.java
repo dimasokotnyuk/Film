@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,7 +16,7 @@ import android.widget.ImageView;
 
 import com.example.film.R;
 import com.example.film.adapters.MovieAdapter;
-import com.example.film.Model.Movie;
+import com.example.film.model.Movie;
 import com.example.film.data.MovieViewModel;
 import com.example.film.utils.PaginationScrollListener;
 

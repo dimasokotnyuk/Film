@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.film.R;
-import com.example.film.Model.Movie;
+import com.example.film.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

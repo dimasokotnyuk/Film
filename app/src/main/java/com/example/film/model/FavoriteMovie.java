@@ -1,4 +1,4 @@
-package com.example.film.Model;
+package com.example.film.model;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;

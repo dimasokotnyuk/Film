@@ -5,9 +5,9 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import com.example.film.Model.FavoriteMovie;
-import com.example.film.Model.Movie;
-import com.example.film.Model.MovieResponse;
+import com.example.film.model.FavoriteMovie;
+import com.example.film.model.Movie;
+import com.example.film.model.MovieResponse;
 import com.example.film.api.ApiFactory;
 import com.example.film.api.ApiService;
 

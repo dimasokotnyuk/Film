@@ -7,12 +7,11 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.film.Model.FavoriteMovie;
-import com.example.film.Model.Movie;
+import com.example.film.model.FavoriteMovie;
+import com.example.film.model.Movie;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 @Dao

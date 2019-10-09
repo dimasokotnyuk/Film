@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.film.Model.FavoriteMovie;
+import com.example.film.model.FavoriteMovie;
 import com.example.film.R;
 import com.example.film.adapters.FavouriteMovieAdapter;
 import com.example.film.data.MovieViewModel;

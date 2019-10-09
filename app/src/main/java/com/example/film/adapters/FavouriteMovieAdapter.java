@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.film.Model.FavoriteMovie;
+import com.example.film.model.FavoriteMovie;
 import com.example.film.R;
 import com.squareup.picasso.Picasso;
 
